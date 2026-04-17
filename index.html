@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GRAIN — Photo Lab</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <header class="topbar">
+    <div class="topbar-logo">GRAIN<span class="logo-dot">.</span>LAB</div>
+    <div class="topbar-actions">
+      <button id="btn-open" class="action-btn">OPEN</button>
+      <button id="btn-save" class="action-btn accent" disabled>EXPORT</button>
+      <input type="file" id="file-input" accept="image/*" hidden />
+    </div>
+  </header>
+
+  <!-- Main Layout -->
+  <main class="app-layout">
+
+    <!-- Canvas Area -->
+    <section class="canvas-area" id="canvas-area">
+      <!-- Drop Overlay -->
+      <div class="drop-overlay" id="drop-overlay">
+        <div class="drop-inner">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+          <p>DROP IMAGE HERE</p>
+          <span>or click OPEN above</span>
+        </div>
+      </div>
+
+      <!-- WebGL Canvas -->
+      <div class="canvas-wrapper" id="canvas-wrapper">
+        <canvas id="gl-canvas"></canvas>
+      </div>
+    </section>
+
+    <!-- Inspector Panel -->
+    <aside class="inspector" id="inspector">
+      <div class="inspector-header">
+        <span>INSPECTOR</span>
+        <button class="inspector-close" id="inspector-toggle">✕</button>
+      </div>
+      <div class="inspector-body" id="inspector-body">
+        <!-- Sliders injected by JS -->
+      </div>
+      <div class="inspector-footer">
+        <button class="reset-btn" id="btn-reset">RESET ALL</button>
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- Bottom Nav -->
+  <nav class="bottom-nav" id="bottom-nav">
+    <button class="nav-btn active" data-category="texture">TEXTURE</button>
+    <button class="nav-btn" data-category="color">COLOR</button>
+    <button class="nav-btn" data-category="distort">DISTORT</button>
+    <button class="nav-btn" data-category="light">LIGHT</button>
+    <div class="nav-separator"></div>
+    <button class="nav-btn inspector-toggle-btn" id="inspector-toggle-btn">⟩ PANEL</button>
+  </nav>
+
+  <script src="script.js"></script>
+</body>
+</html>
