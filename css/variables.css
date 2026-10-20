@@ -1,0 +1,56 @@
+:root {
+  color-scheme: dark;
+
+  --bg: #070708;
+  --bg-deep: #050506;
+  --surface: #0e0f11;
+  --surface-raised: #131518;
+  --surface-strong: #181b1f;
+  --surface-hover: #1d2025;
+  --panel: #101113;
+  --panel-soft: #0b0c0e;
+
+  --border: #282b30;
+  --border-soft: #1c1f23;
+  --border-strong: #393d44;
+
+  --text: #e9ebee;
+  --text-soft: #c0c5cb;
+  --text-dim: #8b9199;
+  --text-mute: #5d636c;
+  --text-faint: #3b4047;
+
+  --accent: #c6df6a;
+  --accent-strong: #dcf47e;
+  --accent-ink: #111408;
+  --accent-soft: rgba(198, 223, 106, 0.12);
+  --accent-line: rgba(198, 223, 106, 0.42);
+
+  --danger: #f07171;
+  --danger-soft: rgba(240, 113, 113, 0.12);
+  --success: #8fd6a0;
+  --warning: #e1b96a;
+
+  --font-mono: "JetBrains Mono", "Cascadia Code", "Courier New", monospace;
+  --font-ui: "JetBrains Mono", "Cascadia Code", "Courier New", monospace;
+
+  --header-height: 54px;
+  --rail-width: 88px;
+  --inspector-width: 326px;
+  --preset-height: 46px;
+  --stage-toolbar-height: 44px;
+  --stage-footer-height: 34px;
+
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+
+  --shadow-panel: 0 18px 50px rgba(0, 0, 0, 0.42);
+  --shadow-popover: 0 16px 40px rgba(0, 0, 0, 0.56);
+
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --duration: 150ms;
+
+  --stage-grid: rgba(255, 255, 255, 0.018);
+}
