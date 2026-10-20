@@ -290,7 +290,10 @@ export function renderAsciiCanvas(grid, settings, { targetWidth = 1200 } = {}) {
   const fontSize = clamp(targetCellWidth / aspect, 1, 512);
   const spec = fontSpec(settings, fontSize);
   scratch.font = spec;
-  const charWidth = measureCharWidth(scratch, settings, fontSize);
+  // Use the measured cell aspect rather than the hinted advance at this font size.
+  // Browsers round glyph advances to whole pixels at small sizes, which would
+  // otherwise stretch the rendered grid. fillText maxWidth keeps rows aligned.
+  const charWidth = fontSize * aspect;
   const lineHeight = fontSize;
   const width = Math.max(1, Math.ceil(grid.cols * charWidth));
   const height = Math.max(1, Math.ceil(grid.rows * lineHeight));
@@ -308,7 +311,7 @@ export function renderAsciiCanvas(grid, settings, { targetWidth = 1200 } = {}) {
     ctx.fillStyle = grid.flatColor;
     for (let row = 0; row < grid.rows; row += 1) {
       const line = grid.chars.slice(row * grid.cols, (row + 1) * grid.cols).join("");
-      if (line.trim()) ctx.fillText(line, 0, row * lineHeight);
+      if (line.trim()) ctx.fillText(line, 0, row * lineHeight, grid.cols * charWidth);
     }
   } else {
     for (let row = 0; row < grid.rows; row += 1) {
@@ -320,7 +323,7 @@ export function renderAsciiCanvas(grid, settings, { targetWidth = 1200 } = {}) {
       const flush = () => {
         if (run) {
           ctx.fillStyle = color;
-          ctx.fillText(run, runStart * charWidth, y);
+          ctx.fillText(run, runStart * charWidth, y, run.length * charWidth);
         }
         run = "";
       };
