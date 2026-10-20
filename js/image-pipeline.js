@@ -153,9 +153,21 @@ export function applyAdjustments(geometryCanvas, editSettings) {
   const sharpening = clamp(Number(editSettings?.sharpening) || 0, 0, 100);
   const invWidth = width > 1 ? 1 / (width - 1) : 0;
   const invHeight = height > 1 ? 1 / (height - 1) : 0;
+  const warmShift = temperature * 38;
+  const greenShift = tint * 30;
+  const tintReduction = greenShift * 0.22;
+  const xDistance = vignette ? new Float32Array(width) : null;
+  if (xDistance) {
+    for (let x = 0; x < width; x += 1) {
+      const dx = (x * invWidth - 0.5) * 2;
+      xDistance[x] = dx * dx;
+    }
+  }
 
   for (let y = 0; y < height; y += 1) {
     const py = y * invHeight;
+    const dy = (py - 0.5) * 2;
+    const dySquared = dy * dy;
     for (let x = 0; x < width; x += 1) {
       const index = (y * width + x) * 4;
       let r = data[index];
@@ -175,13 +187,9 @@ export function applyAdjustments(geometryCanvas, editSettings) {
       b = (b - 128) * contrast + 128;
 
       if (temperature || tint) {
-        const warm = temperature * 38;
-        const green = tint * 30;
-        r += warm;
-        b -= warm;
-        g += green;
-        r -= green * 0.22;
-        b -= green * 0.22;
+        r += warmShift - tintReduction;
+        b -= warmShift + tintReduction;
+        g += greenShift;
       }
 
       const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
@@ -212,10 +220,10 @@ export function applyAdjustments(geometryCanvas, editSettings) {
       }
 
       if (vignette) {
-        const dx = (x * invWidth - 0.5) * 2;
-        const dy = (py - 0.5) * 2;
-        const distance = Math.min(1, Math.sqrt(dx * dx + dy * dy) / 1.4142);
-        const factor = clamp(1 - vignette * distance * distance * 1.45, 0.05, 1);
+        // The previous expression squared the normalized radius, so it can
+        // be computed without a per-pixel square root.
+        const distanceSquared = Math.min(1, (xDistance[x] + dySquared) * 0.5);
+        const factor = Math.max(0.05, 1 - vignette * distanceSquared * 1.45);
         r *= factor;
         g *= factor;
         b *= factor;
