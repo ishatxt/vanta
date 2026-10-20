@@ -264,6 +264,32 @@ export function limitExportSize(size) {
   };
 }
 
+export function applyFinishGrain(canvas, amount = 0) {
+  const strength = clamp(Number(amount) || 0, 0, 100);
+  if (strength <= 0) return canvas;
+
+  const output = cloneCanvas(canvas);
+  const ctx = output.getContext("2d", { willReadFrequently: true });
+  if (!ctx) return output;
+  const imageData = ctx.getImageData(0, 0, output.width, output.height);
+  const data = imageData.data;
+  const noiseScale = (strength / 100) * 68;
+  let seed = 0x9e3779b9 ^ (output.width * 73856093) ^ (output.height * 19349663);
+
+  for (let index = 0; index < data.length; index += 4) {
+    seed ^= seed << 13;
+    seed ^= seed >>> 17;
+    seed ^= seed << 5;
+    const noise = (((seed >>> 0) / 4294967295) - 0.5) * noiseScale;
+    data[index] = data[index] + noise;
+    data[index + 1] = data[index + 1] + noise;
+    data[index + 2] = data[index + 2] + noise;
+  }
+
+  ctx.putImageData(imageData, 0, 0);
+  return output;
+}
+
 export function fillBackground(canvas, color) {
   const output = cloneCanvas(canvas);
   const ctx = output.getContext("2d");
