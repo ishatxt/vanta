@@ -32,19 +32,22 @@ export function normalizeCrop(crop, source) {
 export function getOutputSize(source, editSettings, maxDimension = Infinity) {
   const { width, height } = sourceSize(source);
   const crop = normalizeCrop(editSettings?.crop, source);
-  const sourceW = Math.max(1, width * crop.w);
-  const sourceH = Math.max(1, height * crop.h);
   const rotation = ((Math.round((editSettings?.rotation || 0) / 90) * 90) % 360 + 360) % 360;
   const rotated = rotation === 90 || rotation === 270;
-  const orientedW = rotated ? sourceH : sourceW;
-  const orientedH = rotated ? sourceW : sourceH;
-  const longest = Math.max(orientedW, orientedH);
+  // Crop coordinates are expressed in the displayed, post-rotation image.
+  // Keeping them there means Crop X/Y always move in preview space, even
+  // after a 90-degree rotation.
+  const orientedW = rotated ? height : width;
+  const orientedH = rotated ? width : height;
+  const sourceW = Math.max(1, orientedW * crop.w);
+  const sourceH = Math.max(1, orientedH * crop.h);
+  const longest = Math.max(sourceW, sourceH);
   const scale = Number.isFinite(maxDimension) && maxDimension > 0
     ? Math.min(1, maxDimension / longest)
     : 1;
   return {
-    width: Math.max(1, Math.round(orientedW * scale)),
-    height: Math.max(1, Math.round(orientedH * scale)),
+    width: Math.max(1, Math.round(sourceW * scale)),
+    height: Math.max(1, Math.round(sourceH * scale)),
     sourceWidth: sourceW,
     sourceHeight: sourceH,
     orientedWidth: orientedW,
@@ -62,30 +65,18 @@ export function renderGeometry(source, editSettings, maxDimension = Infinity) {
   if (!ctx) throw new Error("Canvas 2D is unavailable in this browser.");
 
   const { width: naturalWidth, height: naturalHeight } = sourceSize(source);
-  const crop = size.crop;
-  const sx = crop.x * naturalWidth;
-  const sy = crop.y * naturalHeight;
-  const sw = Math.max(1, crop.w * naturalWidth);
-  const sh = Math.max(1, crop.h * naturalHeight);
+  const { crop, rotation, orientedWidth, orientedHeight, scale } = size;
 
-  ctx.imageSmoothingEnabled = size.scale < 1;
+  ctx.imageSmoothingEnabled = scale < 1;
   ctx.imageSmoothingQuality = "high";
   ctx.clearRect(0, 0, size.width, size.height);
   ctx.save();
-  ctx.translate(size.width / 2, size.height / 2);
-  ctx.rotate((size.rotation * Math.PI) / 180);
+  ctx.scale(scale, scale);
+  ctx.translate(-crop.x * orientedWidth, -crop.y * orientedHeight);
+  ctx.translate(orientedWidth / 2, orientedHeight / 2);
+  ctx.rotate((rotation * Math.PI) / 180);
   ctx.scale(editSettings?.flipH ? -1 : 1, editSettings?.flipV ? -1 : 1);
-  ctx.drawImage(
-    source,
-    sx,
-    sy,
-    sw,
-    sh,
-    (-sw * size.scale) / 2,
-    (-sh * size.scale) / 2,
-    sw * size.scale,
-    sh * size.scale,
-  );
+  ctx.drawImage(source, -naturalWidth / 2, -naturalHeight / 2, naturalWidth, naturalHeight);
   ctx.restore();
   return output;
 }
