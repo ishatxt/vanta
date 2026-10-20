@@ -77,12 +77,13 @@ body {
 .preview-scroll {
   position: relative;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start;
+  justify-content: flex-start;
   min-width: 0;
   min-height: 0;
   padding: 24px;
   overflow: auto;
+  overscroll-behavior: contain;
   background-color: #0a0b0d;
   background-image:
     linear-gradient(var(--stage-grid) 1px, transparent 1px),
@@ -94,10 +95,16 @@ body {
 .preview-frame {
   position: relative;
   flex: 0 0 auto;
+  margin: auto;
   overflow: hidden;
   background: #050506;
   box-shadow: 0 10px 48px rgba(0, 0, 0, 0.52), 0 0 0 1px rgba(255, 255, 255, 0.055);
   isolation: isolate;
+  touch-action: pan-x pan-y;
+}
+
+.preview-frame.compare-on,
+.preview-frame.is-dragging-compare {
   touch-action: none;
 }
 
