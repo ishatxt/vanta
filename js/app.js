@@ -312,6 +312,9 @@ function handleSettingCommit() {
 function resetInspectorGroup(group) {
   const settings = state.settings[state.mode];
   resetGroupToDefaults(settings, group);
+  if (state.mode === "edit" && group.id === "geometry") {
+    settings.rotation = 0;
+  }
   if (state.mode === "ascii" && group.id === "characters") {
     const charset = ASCII_CHARSETS.find((item) => item.id === state.settings.ascii.charsetPreset);
     if (charset) state.settings.ascii.charset = charset.charset;
