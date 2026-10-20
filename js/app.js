@@ -912,8 +912,8 @@ function openAsciiTextDialog() {
   }
   const grid = ensureAsciiGrid();
   if (!grid) return;
-  updateTextDialogIfOpen();
   openDialog(dom.textDialog);
+  updateTextDialogIfOpen();
   window.setTimeout(() => dom.asciiText.focus(), 30);
 }
 
