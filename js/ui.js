@@ -29,11 +29,19 @@ function formatValue(control, value) {
   return String(value ?? "");
 }
 
-function fillPercent(control, value) {
+function applyRangeFill(slider, control, value) {
   const min = Number(control.min);
   const max = Number(control.max);
-  if (!Number.isFinite(min) || !Number.isFinite(max) || max === min) return 0;
-  return Math.min(100, Math.max(0, ((Number(value) - min) / (max - min)) * 100));
+  const current = Number(value);
+  if (!Number.isFinite(min) || !Number.isFinite(max) || max === min || !Number.isFinite(current)) {
+    slider.style.setProperty("--fill-start", "0%");
+    slider.style.setProperty("--fill-end", "0%");
+    return;
+  }
+  const position = Math.min(100, Math.max(0, ((current - min) / (max - min)) * 100));
+  const origin = min < 0 && max > 0 ? ((0 - min) / (max - min)) * 100 : 0;
+  slider.style.setProperty("--fill-start", `${Math.min(position, origin)}%`);
+  slider.style.setProperty("--fill-end", `${Math.max(position, origin)}%`);
 }
 
 function makeLabel(control, valueElement) {
@@ -72,13 +80,13 @@ function buildRange(control, settings, handlers) {
   slider.dataset.percent = control.percent ? "true" : "false";
   slider.dataset.digits = String(control.digits ?? 0);
   slider.dataset.suffix = control.suffix || "";
-  slider.style.setProperty("--fill", `${fillPercent(control, value)}%`);
+  applyRangeFill(slider, control, value);
 
   slider.addEventListener("input", () => {
     const next = Number.parseFloat(slider.value);
     writePath(settings, control.key, next);
     valueElement.textContent = formatValue(control, next);
-    slider.style.setProperty("--fill", `${fillPercent(control, next)}%`);
+    applyRangeFill(slider, control, next);
     handlers.onChange(control.key, next, control);
   });
   slider.addEventListener("change", () => {
@@ -238,6 +246,7 @@ export function buildInspector({
   onCommit,
   onAction,
   onResetGroup,
+  openState = null,
 }) {
   const fragment = document.createDocumentFragment();
   const handlers = { onChange, onCommit, onAction };
@@ -245,8 +254,16 @@ export function buildInspector({
     const details = document.createElement("details");
     details.className = "inspector-group";
     details.dataset.group = group.id;
-    details.open = Boolean(group.open);
+    const remembered = openState && Object.prototype.hasOwnProperty.call(openState, group.id)
+      ? openState[group.id]
+      : group.open;
+    details.open = Boolean(remembered);
     if (group.open) details.dataset.wasOpen = "true";
+    if (openState) {
+      details.addEventListener("toggle", () => {
+        openState[group.id] = details.open;
+      });
+    }
 
     const summary = document.createElement("summary");
     const title = document.createElement("span");
@@ -284,13 +301,10 @@ export function refreshInspector(container, settings) {
     const value = readPath(settings, path);
     if (kind === "range") {
       input.value = value;
-      input.style.setProperty("--fill", `${fillPercent(
-        {
-          min: Number(input.min),
-          max: Number(input.max),
-        },
-        value,
-      )}%`);
+      applyRangeFill(input, {
+        min: Number(input.min),
+        max: Number(input.max),
+      }, value);
       const output = input.closest(".control")?.querySelector(".control-value");
       if (output) {
         if (input.dataset.percent === "true") {

@@ -2,33 +2,45 @@
   display: none;
 }
 
-@media (max-width: 1180px) {
+@media (max-width: 1240px) {
   :root {
-    --inspector-width: 302px;
-    --rail-width: 80px;
+    --inspector-width: 326px;
+    --rail-width: 88px;
+  }
+}
+
+@media (max-width: 1080px) {
+  :root {
+    --inspector-width: 308px;
+    --rail-width: 84px;
   }
 
   .stage-description {
-    max-width: 240px;
-  }
-
-  .dimension-readout {
-    display: none;
+    max-width: 190px;
   }
 }
 
 @media (max-width: 900px) {
   :root {
-    --rail-width: 70px;
+    --rail-width: 76px;
     --inspector-width: 0px;
+    --stage-pad-top: 56px;
+    --stage-pad-bottom: 50px;
   }
 
   .workspace {
     grid-template-columns: var(--rail-width) minmax(0, 1fr);
   }
 
-  .mode-name {
-    font-size: 7.5px;
+  .stage-description,
+  .dimension-readout,
+  .stage-footer {
+    display: none;
+  }
+
+  .preview-scroll {
+    padding-right: 22px;
+    padding-left: 22px;
   }
 
   .inspector {
@@ -39,12 +51,12 @@
     left: 0;
     z-index: 72;
     width: 100%;
-    height: min(64dvh, 560px);
+    height: min(66dvh, 580px);
     transform: translateY(calc(100% + 30px));
     border-top: 1px solid var(--border);
     border-left: 0;
-    border-radius: 10px 10px 0 0;
-    box-shadow: 0 -20px 70px rgba(0, 0, 0, 0.55);
+    border-radius: 14px 14px 0 0;
+    box-shadow: 0 -24px 80px rgba(0, 0, 0, 0.58);
     opacity: 0;
     visibility: hidden;
     transition:
@@ -56,12 +68,12 @@
   .inspector::before {
     content: "";
     position: absolute;
-    top: 6px;
+    top: 7px;
     left: 50%;
-    width: 34px;
-    height: 2px;
+    width: 36px;
+    height: 3px;
     transform: translateX(-50%);
-    border-radius: 2px;
+    border-radius: 3px;
     background: var(--border-strong);
   }
 
@@ -72,8 +84,8 @@
   }
 
   .inspector-header {
-    min-height: 58px;
-    padding-top: 16px;
+    min-height: 64px;
+    padding: 19px 20px 14px;
   }
 
   .inspector-close {
@@ -82,9 +94,6 @@
 
   .mobile-inspector-btn {
     display: inline-flex;
-    border-color: var(--border);
-    background: var(--surface-raised);
-    color: var(--text-soft);
   }
 
   body.inspector-open::after {
@@ -92,56 +101,62 @@
     position: fixed;
     inset: var(--header-height) 0 var(--preset-height);
     z-index: 68;
-    background: rgba(0, 0, 0, 0.46);
-    backdrop-filter: blur(1px);
+    background: rgba(0, 0, 0, 0.48);
+    backdrop-filter: blur(2px);
   }
 
   .preset-bar {
-    padding-right: 8px;
+    padding-right: 10px;
   }
 
   .status-message {
-    display: none;
+    display: block;
+    max-width: 34vw;
+    font-size: 9.5px;
   }
 
-  .format-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .status-detail,
+  .mode-indicator {
+    display: none;
   }
 }
 
 @media (max-width: 720px) {
   :root {
-    --header-height: 94px;
-    --preset-height: 44px;
-    --stage-toolbar-height: 42px;
-    --stage-footer-height: 30px;
+    --header-height: 92px;
+    --rail-width: 0px;
+    --preset-height: 48px;
+    --stage-pad-top: 54px;
+    --stage-pad-bottom: 48px;
   }
 
   .app-header {
     flex-wrap: wrap;
     align-content: center;
-    gap: 6px;
-    padding: 6px 8px;
+    gap: 7px;
+    padding: 9px 12px 8px;
   }
 
   .brand-block {
     width: 100%;
-    justify-content: space-between;
+    justify-content: flex-start;
   }
 
   .wordmark {
-    font-size: 14px;
+    font-size: 13px;
   }
 
-  .brand-divider,
+  .brand-divider {
+    height: 14px;
+  }
+
   .brand-subtitle {
-    display: none;
+    font-size: 9.5px;
   }
 
   .header-actions {
     width: 100%;
-    flex-wrap: nowrap;
-    gap: 5px;
+    gap: 6px;
     overflow-x: auto;
     padding-bottom: 1px;
     scrollbar-width: none;
@@ -151,29 +166,38 @@
     display: none;
   }
 
-  .header-actions .btn {
-    height: 26px;
-    padding: 0 8px;
-    font-size: 8px;
+  .header-divider {
+    display: none;
   }
 
-  .header-actions .icon-btn {
-    width: 26px;
-    height: 26px;
+  .header-actions .btn {
+    height: 30px;
+    padding: 0 9px;
+    font-size: 10.5px;
+  }
+
+  .header-actions .icon-btn,
+  .header-actions .button-cluster .icon-btn {
+    width: 28px;
+    height: 28px;
+  }
+
+  .header-actions .button-cluster .btn {
+    height: 28px;
+    padding: 0 8px;
   }
 
   .workspace {
-    display: grid;
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: 51px minmax(0, 1fr);
+    grid-template-rows: 56px minmax(0, 1fr);
   }
 
   .mode-rail {
     flex-direction: row;
     align-items: stretch;
-    gap: 2px;
+    gap: 4px;
     min-height: 0;
-    padding: 4px 6px;
+    padding: 5px 8px;
     border-right: 0;
     border-bottom: 1px solid var(--border-soft);
   }
@@ -181,83 +205,54 @@
   .mode-btn {
     flex: 1 1 0;
     flex-direction: row;
-    gap: 6px;
+    gap: 7px;
     min-width: 0;
-    min-height: 41px;
-    padding: 4px 5px;
+    min-height: 45px;
+    padding: 5px 7px;
+    border-radius: 7px;
   }
 
   .mode-btn.is-active::before {
-    top: auto;
-    right: 8px;
-    bottom: -5px;
-    left: 8px;
-    width: auto;
-    height: 2px;
-    border-radius: 2px 2px 0 0;
+    display: none;
   }
 
   .mode-icon {
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
   }
 
   .mode-icon svg {
-    width: 15px;
-    height: 15px;
+    width: 17px;
+    height: 17px;
   }
 
   .mode-name {
     max-width: none;
-    overflow: hidden;
-    font-size: 8px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .mode-index,
-  .mode-rail-footer {
-    display: none;
+    font-size: 10px;
   }
 
   .stage-toolbar {
-    gap: 6px;
-    padding: 0 8px;
+    top: 10px;
+    right: 12px;
+    left: 12px;
   }
 
   .stage-heading {
-    min-width: 0;
+    gap: 7px;
+    padding: 6px 9px;
   }
 
-  .stage-description,
-  .dimension-readout {
-    display: none;
+  .stage-mode {
+    font-size: 11px;
   }
 
   .stage-tools {
-    flex: 0 0 auto;
     gap: 5px;
   }
 
-  .zoom-controls {
-    gap: 0;
-  }
-
-  .zoom-label {
-    min-width: 30px;
-    padding-right: 3px;
-    font-size: 7px;
-  }
-
-  .mini-btn {
-    min-width: 22px;
-    height: 20px;
-    padding: 0 4px;
-    font-size: 8px;
-  }
-
   .preview-scroll {
-    padding: 10px;
+    padding-right: 12px;
+    padding-left: 12px;
   }
 
   .preview-frame.is-empty {
@@ -267,7 +262,7 @@
 
   .empty-state {
     gap: 9px;
-    padding: 22px;
+    padding: 24px;
   }
 
   .empty-state h1 {
@@ -275,69 +270,62 @@
   }
 
   .empty-state p {
-    max-width: 38ch;
-    font-size: 10px;
+    max-width: 36ch;
+    font-size: 11px;
   }
 
   .empty-mark {
-    width: 48px;
-    height: 48px;
-    font-size: 20px;
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
   }
 
-  .stage-footer {
-    padding: 0 8px;
-  }
-
-  .render-metrics {
-    display: none;
+  .zoom-dock {
+    bottom: 12px;
   }
 
   .preset-bar {
-    gap: 6px;
-    padding-right: 6px;
+    gap: 8px;
+    padding-right: 8px;
   }
 
   .preset-strip-wrap {
-    gap: 6px;
-    padding-left: 8px;
+    gap: 8px;
+    padding-left: 10px;
   }
 
   .preset-label {
     display: none;
   }
 
+  .preset-strip {
+    gap: 5px;
+    padding: 6px 0;
+  }
+
   .preset-chip {
-    height: 22px;
-    padding: 0 7px;
-    font-size: 7.5px;
+    height: 26px;
+    padding: 0 8px;
+    font-size: 9.5px;
+  }
+
+  .preset-delete {
+    width: 22px;
   }
 
   .preset-save-mini {
-    min-width: 42px;
-  }
-
-  .mode-indicator {
-    display: none;
-  }
-
-  .statusbar {
-    gap: 6px;
+    height: 26px;
+    font-size: 9.5px;
   }
 
   .status-message {
-    display: block;
-    max-width: 45vw;
-    font-size: 8px;
-  }
-
-  .status-detail {
-    display: none;
+    max-width: 40vw;
+    font-size: 9px;
   }
 
   .inspector {
     bottom: var(--preset-height);
-    height: min(62dvh, 530px);
+    height: min(66dvh, 560px);
   }
 
   .dialog {
@@ -347,16 +335,20 @@
 
   .dialog-card {
     max-height: calc(100dvh - 20px);
-    padding: 14px;
+    padding: 18px;
   }
 
   .dialog-header h2 {
-    font-size: 14px;
+    font-size: 17px;
+  }
+
+  .dialog-header p {
+    font-size: 11px;
   }
 
   .ascii-text {
-    min-height: 38vh;
-    font-size: 8px;
+    min-height: 36vh;
+    font-size: 8.5px;
   }
 
   .toast-region {
@@ -371,13 +363,32 @@
 }
 
 @media (max-width: 520px) {
-  .stage-mode {
-    font-size: 9px;
+  #btn-open span,
+  #btn-before span,
+  #btn-compare span {
+    display: none;
+  }
+
+  #btn-open,
+  #btn-before,
+  #btn-compare {
+    width: 30px;
+    padding: 0;
+  }
+
+  .header-actions .button-cluster .btn {
+    width: 29px;
+    padding: 0;
   }
 
   .zoom-controls #zoom-out,
   .zoom-controls #zoom-in {
     display: none;
+  }
+
+  .zoom-label {
+    min-width: 40px;
+    padding: 0 6px 0 2px;
   }
 
   .format-grid {
@@ -396,33 +407,55 @@
     align-items: flex-start;
     flex-direction: column;
     gap: 4px;
+    padding: 9px 2px;
   }
 }
 
-@media (max-width: 390px) {
-  .header-actions .btn {
-    padding: 0 6px;
-    font-size: 7.5px;
+@media (max-width: 360px) {
+  .brand-subtitle {
+    display: none;
   }
 
-  .header-actions .icon-btn {
-    width: 24px;
+  .brand-divider {
+    display: none;
+  }
+
+  .header-actions {
+    gap: 4px;
+  }
+
+  .header-actions .btn {
+    padding: 0 7px;
+    font-size: 10px;
+  }
+
+  #btn-export {
+    padding: 0 8px;
+  }
+
+  .mode-btn {
+    gap: 5px;
+    padding: 5px 5px;
   }
 
   .mode-name {
-    font-size: 7px;
+    font-size: 9px;
+  }
+
+  .status-message {
+    display: none;
   }
 }
 
-@media (max-height: 620px) and (max-width: 900px) {
+@media (max-height: 640px) and (max-width: 900px) {
   .inspector {
-    height: min(72dvh, calc(100dvh - var(--header-height) - var(--preset-height)));
+    height: min(76dvh, calc(100dvh - var(--header-height) - var(--preset-height)));
   }
 
   .inspector-header {
-    min-height: 50px;
-    padding-top: 14px;
-    padding-bottom: 9px;
+    min-height: 54px;
+    padding-top: 16px;
+    padding-bottom: 10px;
   }
 }
 
@@ -433,5 +466,16 @@
 
   .inspector {
     padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
   }
 }

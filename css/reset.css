@@ -30,11 +30,14 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-ui);
-  font-size: 12px;
-  line-height: 1.45;
-  letter-spacing: 0.015em;
+  font-size: 13px;
+  font-variation-settings: "wght" 400;
+  line-height: 1.5;
+  letter-spacing: -0.005em;
   overflow: hidden;
   overscroll-behavior: none;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 button,
@@ -50,6 +53,8 @@ button {
   border: 0;
   background: none;
   cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 button:disabled {
@@ -99,13 +104,13 @@ fieldset {
 }
 
 :focus-visible {
-  outline: 1px solid var(--accent);
+  outline: 2px solid var(--accent-line);
   outline-offset: 2px;
 }
 
 ::-webkit-scrollbar {
-  width: 9px;
-  height: 9px;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
@@ -113,19 +118,19 @@ fieldset {
 }
 
 ::-webkit-scrollbar-thumb {
-  border: 2px solid transparent;
+  border: 3px solid transparent;
   border-radius: 20px;
-  background: #2b2f35;
+  background: #343840;
   background-clip: padding-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #3a3f47;
+  background: #474c55;
   background-clip: padding-box;
 }
 
 * {
-  scrollbar-color: #2b2f35 transparent;
+  scrollbar-color: #343840 transparent;
   scrollbar-width: thin;
 }
 

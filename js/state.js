@@ -5,25 +5,25 @@ export const MODES = Object.freeze([
     id: "edit",
     label: "Edit",
     short: "EDIT",
-    description: "Non-destructive photo adjustments, crop, rotate, and film looks.",
+    description: "Non-destructive photo adjustments, crop, and geometry.",
   },
   {
     id: "ascii",
     label: "ASCII",
     short: "ASCII",
-    description: "Convert the shared image into a font-aware character grid.",
+    description: "Map the shared image into a font-aware character grid.",
   },
   {
     id: "pixel",
     label: "Pixel",
     short: "PIXEL",
-    description: "Downsample, quantize, dither, and reconstruct crisp pixel art.",
+    description: "Downsample, quantize, dither, and rebuild pixel art.",
   },
   {
     id: "grain",
     label: "Grain Lab",
     short: "GRAIN",
-    description: "WebGL film grain, halftone, bloom, aberration, and film finishing.",
+    description: "WebGL grain, halftone, bloom, and film finishing.",
   },
 ]);
 
@@ -301,12 +301,12 @@ export const PIXEL_PALETTES = Object.freeze([
 export const PIXEL_PALETTE_IDS = Object.freeze(PIXEL_PALETTES.map((palette) => palette.id));
 
 export const GRAIN_PRESETS = Object.freeze([
-  { id: "clean", label: "Clean Scan", settings: { grainIntensity: 0.03, grainSize: 0.003, halftoneSize: 0.001, bloomIntensity: 0.15, fade: 0, vignette: 0.18 } },
-  { id: "fine", label: "Fine Grain", settings: { grainIntensity: 0.1, grainSize: 0.002, halftoneSize: 0.001, bloomIntensity: 0.3, fade: 4, vignette: 0.3 } },
-  { id: "35mm", label: "35mm Film", settings: { grainIntensity: 0.18, grainSize: 0.005, halftoneSize: 0.001, bloomIntensity: 0.45, fade: 12, halation: 0.25, vignette: 0.55, temperature: 6 } },
-  { id: "16mm", label: "16mm Push", settings: { grainIntensity: 0.28, grainSize: 0.008, halftoneSize: 0.001, bloomIntensity: 0.55, fade: 18, halation: 0.4, vignette: 0.7, contrast: 1.1 } },
-  { id: "expired", label: "Expired Stock", settings: { grainIntensity: 0.22, grainSize: 0.006, halftoneSize: 0.001, bloomIntensity: 0.35, fade: 28, halation: 0.3, lightLeak: 0.2, vignette: 0.6, temperature: 14, tint: 4 } },
-  { id: "noir", label: "Noir Lab", settings: { grainIntensity: 0.2, grainSize: 0.004, halftoneSize: 0.001, saturation: 0, contrast: 1.25, bloomIntensity: 0.35, fade: 6, vignette: 0.75 } },
+  { id: "clean", label: "Clean Scan", settings: { grainIntensity: 0.03, grainSize: 0.003, halftoneSize: 0.002, bloomIntensity: 0.15, fade: 0, vignette: 0.18 } },
+  { id: "fine", label: "Fine Grain", settings: { grainIntensity: 0.1, grainSize: 0.002, halftoneSize: 0.002, bloomIntensity: 0.3, fade: 0.04, vignette: 0.3 } },
+  { id: "35mm", label: "35mm Film", settings: { grainIntensity: 0.18, grainSize: 0.005, halftoneSize: 0.002, bloomIntensity: 0.45, fade: 0.12, halation: 0.25, vignette: 0.55, temperature: 0.06 } },
+  { id: "16mm", label: "16mm Push", settings: { grainIntensity: 0.28, grainSize: 0.008, halftoneSize: 0.002, bloomIntensity: 0.55, fade: 0.18, halation: 0.4, vignette: 0.7, contrast: 1.1 } },
+  { id: "expired", label: "Expired Stock", settings: { grainIntensity: 0.22, grainSize: 0.006, halftoneSize: 0.002, bloomIntensity: 0.35, fade: 0.28, halation: 0.3, lightLeak: 0.2, vignette: 0.6, temperature: 0.14, tint: 0.04 } },
+  { id: "noir", label: "Noir Lab", settings: { grainIntensity: 0.2, grainSize: 0.004, halftoneSize: 0.002, saturation: 0, contrast: 1.25, bloomIntensity: 0.35, fade: 0.06, vignette: 0.75 } },
   { id: "arcade", label: "Arcade Halftone", settings: { grainIntensity: 0.08, grainSize: 0.004, halftoneSize: 0.012, halftoneContrast: 2.2, ditherLevels: 4, ditherStrength: 0.8, bloomIntensity: 0.6, fade: 0, vignette: 0.4 } },
 ]);
 

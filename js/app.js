@@ -103,6 +103,7 @@ const app = {
   exportQuality: 92,
   exportBusy: false,
   presetMode: "edit",
+  groupOpen: {},
 };
 
 const dom = {
@@ -279,6 +280,7 @@ function syncModeUI({ rebuild = true } = {}) {
 }
 
 function buildModeInspector({ resetScroll = false } = {}) {
+  const openState = app.groupOpen[state.mode] || (app.groupOpen[state.mode] = {});
   buildInspector({
     container: dom.inspectorBody,
     groups: GROUPS_BY_MODE[state.mode],
@@ -287,6 +289,7 @@ function buildModeInspector({ resetScroll = false } = {}) {
     onCommit: handleSettingCommit,
     onAction: handleInspectorAction,
     onResetGroup: resetInspectorGroup,
+    openState,
   });
   if (resetScroll) dom.inspectorBody.scrollTop = 0;
 }
@@ -675,10 +678,11 @@ function openInspector() {
   dom.btnInspectorToggle.setAttribute("aria-expanded", "true");
 }
 
-function closeInspector() {
+function closeInspector({ restoreFocus = false } = {}) {
   dom.inspector.classList.remove("is-open");
   document.body.classList.remove("inspector-open");
   dom.btnInspectorToggle.setAttribute("aria-expanded", "false");
+  if (restoreFocus) dom.btnInspectorToggle.focus({ preventScroll: true });
 }
 
 function openSettingsMenu() {
@@ -1120,6 +1124,9 @@ function handleKeydown(event) {
   const key = event.key.toLowerCase();
 
   if (event.key === "Escape") {
+    if (document.body.classList.contains("inspector-open")) {
+      closeInspector({ restoreFocus: true });
+    }
     closeSettingsMenu();
     return;
   }
@@ -1221,7 +1228,13 @@ function bindEvents() {
   });
 
   dom.btnInspectorToggle.addEventListener("click", openInspector);
-  dom.btnInspectorClose.addEventListener("click", closeInspector);
+  dom.btnInspectorClose.addEventListener("click", () => closeInspector({ restoreFocus: true }));
+
+  document.addEventListener("pointerdown", (event) => {
+    if (!document.body.classList.contains("inspector-open")) return;
+    if (dom.inspector.contains(event.target) || dom.btnInspectorToggle.contains(event.target)) return;
+    closeInspector();
+  });
 
   dom.exportForm.addEventListener("submit", (event) => {
     event.preventDefault();

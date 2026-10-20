@@ -3,12 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#0a0a0b" />
+  <meta name="theme-color" content="#111216" />
+  <meta name="color-scheme" content="dark" />
   <meta name="description" content="VANTA Studio is a browser-based image editor for photo adjustments, ASCII conversion, pixel art, and WebGL film grain." />
   <title>VANTA Studio — Image, ASCII, Pixel, Grain</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="canonical" href="https://ishatxt.github.io/vanta/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="VANTA Studio" />
+  <meta property="og:title" content="VANTA Studio — Image, ASCII, Pixel, Grain" />
+  <meta property="og:description" content="A local-first image studio for photo adjustments, ASCII art, pixel art, and WebGL film grain. No uploads, no build step." />
+  <meta property="og:url" content="https://ishatxt.github.io/vanta/" />
+  <meta property="og:image" content="https://ishatxt.github.io/vanta/docs/edit.jpg" />
+  <meta property="og:image:width" content="1440" />
+  <meta property="og:image:height" content="900" />
+  <meta property="og:image:alt" content="The VANTA Studio editor showing a sunset landscape in Edit mode." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="VANTA Studio — Image, ASCII, Pixel, Grain" />
+  <meta name="twitter:description" content="A local-first image studio for photo adjustments, ASCII art, pixel art, and WebGL film grain." />
+  <meta name="twitter:image" content="https://ishatxt.github.io/vanta/docs/edit.jpg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/variables.css" />
   <link rel="stylesheet" href="css/reset.css" />
   <link rel="stylesheet" href="css/layout.css" />
@@ -25,7 +41,10 @@
     </div>
 
     <div class="header-actions">
-      <button type="button" class="btn btn-primary" id="btn-open">Open image</button>
+      <button type="button" class="btn btn-primary" id="btn-open" title="Open image (Ctrl+O)" aria-label="Open image">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" /><path d="m3 16 5-5 4 4 2-2 7 7M15.5 8.5h.01" /></svg>
+        <span>Open image</span>
+      </button>
 
       <div class="button-cluster" role="group" aria-label="History">
         <button type="button" class="icon-btn" id="btn-undo" title="Undo (Ctrl+Z)" aria-label="Undo" disabled>
@@ -37,14 +56,25 @@
       </div>
 
       <div class="button-cluster" role="group" aria-label="Comparison">
-        <button type="button" class="btn btn-ghost" id="btn-before" aria-pressed="false">Before</button>
-        <button type="button" class="btn btn-ghost" id="btn-compare" aria-pressed="false">Compare</button>
+        <button type="button" class="btn btn-ghost" id="btn-before" aria-label="Before" aria-pressed="false" title="Show the original (B)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" /><circle cx="12" cy="12" r="2.5" /></svg>
+          <span>Before</span>
+        </button>
+        <button type="button" class="btn btn-ghost" id="btn-compare" aria-label="Compare" aria-pressed="false" title="Toggle before/after split (C)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M12 4v16M8 9l-3 3 3 3M16 9l3 3-3 3" /></svg>
+          <span>Compare</span>
+        </button>
       </div>
 
-      <button type="button" class="btn btn-accent" id="btn-export" disabled>Export</button>
+      <span class="header-divider" aria-hidden="true"></span>
+
+      <button type="button" class="btn btn-accent" id="btn-export" disabled>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m-4-4 4 4 4-4M4 20h16" /></svg>
+        <span>Export</span>
+      </button>
 
       <div class="menu-anchor">
-        <button type="button" class="icon-btn" id="btn-settings" aria-label="Settings" aria-haspopup="menu" aria-expanded="false">
+        <button type="button" class="icon-btn" id="btn-settings" title="Settings" aria-label="Settings" aria-haspopup="menu" aria-expanded="false">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z" /><path d="M19 13.5v-3l-2.1-.4a6.7 6.7 0 0 0-.7-1.7l1.2-1.8-2.1-2.1-1.8 1.2a6.7 6.7 0 0 0-1.7-.7L11.5 3h-3l-.4 2.1a6.7 6.7 0 0 0-1.7.7L4.6 4.6 2.5 6.7l1.2 1.8a6.7 6.7 0 0 0-.7 1.7L1 10.5v3l2.1.4a6.7 6.7 0 0 0 .7 1.7l-1.2 1.8 2.1 2.1 1.8-1.2a6.7 6.7 0 0 0 1.7.7l.4 2.1h3l.4-2.1a6.7 6.7 0 0 0 1.7-.7l1.8 1.2 2.1-2.1-1.2-1.8a6.7 6.7 0 0 0 .7-1.7l2.1-.4Z" /></svg>
         </button>
         <div class="menu" id="settings-menu" role="menu" hidden>
@@ -60,38 +90,30 @@
 
   <div class="workspace">
     <nav class="mode-rail" aria-label="Creative modes">
-      <button type="button" class="mode-btn is-active" data-mode="edit" aria-pressed="true">
+      <button type="button" class="mode-btn is-active" data-mode="edit" aria-pressed="true" title="Edit mode (1)">
         <span class="mode-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9M7 4v6M17 14v6" /></svg>
         </span>
         <span class="mode-name">Edit</span>
-        <span class="mode-index">01</span>
       </button>
-      <button type="button" class="mode-btn" data-mode="ascii" aria-pressed="false">
+      <button type="button" class="mode-btn" data-mode="ascii" aria-pressed="false" title="ASCII mode (2)">
         <span class="mode-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24"><path d="M5 6h14M5 10h9M5 14h14M5 18h7" /></svg>
         </span>
         <span class="mode-name">ASCII</span>
-        <span class="mode-index">02</span>
       </button>
-      <button type="button" class="mode-btn" data-mode="pixel" aria-pressed="false">
+      <button type="button" class="mode-btn" data-mode="pixel" aria-pressed="false" title="Pixel mode (3)">
         <span class="mode-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z" /></svg>
         </span>
         <span class="mode-name">Pixel</span>
-        <span class="mode-index">03</span>
       </button>
-      <button type="button" class="mode-btn" data-mode="grain" aria-pressed="false">
+      <button type="button" class="mode-btn" data-mode="grain" aria-pressed="false" title="Grain Lab mode (4)">
         <span class="mode-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24"><path d="M5 5h.01M10 6h.01M16 5h.01M19 9h.01M7 11h.01M13 10h.01M17 14h.01M5 16h.01M10 17h.01M15 18h.01M19 20h.01M3 9h.01M20 15h.01" /></svg>
         </span>
         <span class="mode-name">Grain Lab</span>
-        <span class="mode-index">04</span>
       </button>
-      <div class="mode-rail-footer">
-        <span class="rail-label">VANTA</span>
-        <span class="rail-version">v4</span>
-      </div>
     </nav>
 
     <main class="stage" id="stage">
@@ -102,13 +124,6 @@
         </div>
         <div class="stage-tools">
           <span class="dimension-readout" id="image-dimensions">No image loaded</span>
-          <div class="zoom-controls" role="group" aria-label="Zoom">
-            <button type="button" class="mini-btn" id="zoom-out" aria-label="Zoom out">−</button>
-            <button type="button" class="mini-btn" id="zoom-fit" aria-pressed="true">Fit</button>
-            <button type="button" class="mini-btn" id="zoom-100" aria-pressed="false">100%</button>
-            <button type="button" class="mini-btn" id="zoom-in" aria-label="Zoom in">+</button>
-            <span class="zoom-label" id="zoom-label">100%</span>
-          </div>
           <button type="button" class="mini-btn mobile-inspector-btn" id="btn-inspector-toggle" aria-controls="inspector" aria-expanded="false">Adjust</button>
         </div>
       </div>
@@ -121,12 +136,22 @@
           <div class="compare-divider" id="compare-divider" aria-hidden="true"><span></span></div>
           <div class="empty-state" id="empty-state">
             <div class="empty-mark" aria-hidden="true">V</div>
-            <h1>Bring in an image.</h1>
-            <p>Drop a photo anywhere, paste from the clipboard, or choose a file. The same source powers Edit, ASCII, Pixel, and Grain Lab.</p>
+            <h1>Start with an image.</h1>
+            <p>Drop a photo here, paste from the clipboard, or browse your files. One source powers Edit, ASCII, Pixel, and Grain Lab.</p>
             <button type="button" class="btn btn-primary" id="btn-open-empty">Open image</button>
-            <span class="empty-hint">PNG, JPG, WEBP, GIF, BMP, AVIF · Up to 60 MB</span>
+            <span class="empty-hint">PNG, JPG, WEBP, GIF, BMP, AVIF · 60 MB max · processed locally</span>
           </div>
           <span class="preview-badge" id="preview-badge" hidden></span>
+        </div>
+      </div>
+
+      <div class="zoom-dock">
+        <div class="zoom-controls" role="group" aria-label="Zoom">
+          <button type="button" class="mini-btn zoom-icon-btn" id="zoom-out" title="Zoom out" aria-label="Zoom out">−</button>
+          <button type="button" class="mini-btn" id="zoom-fit" title="Fit image (0)" aria-pressed="true">Fit</button>
+          <button type="button" class="mini-btn" id="zoom-100" title="Actual size (Shift+0)" aria-pressed="false">100%</button>
+          <button type="button" class="mini-btn zoom-icon-btn" id="zoom-in" title="Zoom in" aria-label="Zoom in">+</button>
+          <span class="zoom-label" id="zoom-label">100%</span>
         </div>
       </div>
 
@@ -142,7 +167,7 @@
           <h2 id="inspector-title">Edit</h2>
           <p id="inspector-subtitle">Shared image adjustments</p>
         </div>
-        <button type="button" class="icon-btn inspector-close" id="btn-inspector-close" aria-label="Close inspector">
+        <button type="button" class="icon-btn inspector-close" id="btn-inspector-close" title="Close adjustments" aria-label="Close inspector">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
         </button>
       </div>
@@ -186,7 +211,7 @@
           <h2 id="export-title">Export</h2>
           <p>Rendered from the original source and current settings.</p>
         </div>
-        <button type="button" class="icon-btn" id="export-close" aria-label="Close export dialog">
+        <button type="button" class="icon-btn" id="export-close" title="Close export dialog" aria-label="Close export dialog">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
         </button>
       </header>
@@ -199,7 +224,7 @@
       <p class="dialog-note" id="export-note">PNG preserves transparency and is best for pixel art.</p>
       <footer class="dialog-footer">
         <button type="button" class="btn btn-ghost" id="export-cancel">Cancel</button>
-        <button type="button" class="btn btn-accent" id="export-run">Export file</button>
+        <button type="button" class="btn btn-accent" id="export-run" autofocus>Export file</button>
       </footer>
     </form>
   </dialog>
@@ -211,7 +236,7 @@
           <h2 id="text-title">ASCII text</h2>
           <p id="text-summary">Shared character grid from the current preview.</p>
         </div>
-        <button type="button" class="icon-btn" id="text-close" aria-label="Close text view">
+        <button type="button" class="icon-btn" id="text-close" title="Close text view" aria-label="Close text view">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
         </button>
       </header>
@@ -231,12 +256,12 @@
           <h2 id="preset-title">Save preset</h2>
           <p id="preset-subtitle">Store the current mode settings in this browser.</p>
         </div>
-        <button type="button" class="icon-btn" id="preset-close" aria-label="Close preset dialog">
+        <button type="button" class="icon-btn" id="preset-close" title="Close preset dialog" aria-label="Close preset dialog">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
         </button>
       </header>
       <label class="field-label" for="preset-name">Preset name</label>
-      <input type="text" id="preset-name" class="text-field" maxlength="48" autocomplete="off" placeholder="My film look" />
+      <input type="text" id="preset-name" class="text-field" maxlength="48" autocomplete="off" placeholder="My film look" autofocus />
       <p class="dialog-error" id="preset-error" role="alert"></p>
       <footer class="dialog-footer">
         <button type="button" class="btn btn-ghost" id="preset-cancel">Cancel</button>
@@ -252,7 +277,7 @@
           <h2 id="shortcuts-title">Keyboard shortcuts</h2>
           <p>Work without leaving the image.</p>
         </div>
-        <button type="button" class="icon-btn" id="shortcuts-close" aria-label="Close shortcuts">
+        <button type="button" class="icon-btn" id="shortcuts-close" title="Close shortcuts" aria-label="Close shortcuts">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
         </button>
       </header>
@@ -269,7 +294,7 @@
         <div><dt>Close dialog</dt><dd><kbd>Esc</kbd></dd></div>
       </dl>
       <footer class="dialog-footer">
-        <button type="button" class="btn btn-accent" id="shortcuts-done">Done</button>
+        <button type="button" class="btn btn-accent" id="shortcuts-done" autofocus>Done</button>
       </footer>
     </div>
   </dialog>
