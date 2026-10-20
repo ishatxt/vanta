@@ -90,9 +90,12 @@ export function renderGeometry(source, editSettings, maxDimension = Infinity) {
   return output;
 }
 
-export function cloneCanvas(canvas) {
+export function cloneCanvas(canvas, contextOptions = undefined) {
   const output = createCanvas(canvas.width, canvas.height);
-  const ctx = output.getContext("2d");
+  const ctx = contextOptions
+    ? output.getContext("2d", contextOptions)
+    : output.getContext("2d");
+  if (!ctx) throw new Error("Canvas 2D is unavailable in this browser.");
   ctx.drawImage(canvas, 0, 0);
   return output;
 }
@@ -137,7 +140,7 @@ function applySharpen(data, width, height, amount) {
 }
 
 export function applyAdjustments(geometryCanvas, editSettings) {
-  const output = cloneCanvas(geometryCanvas);
+  const output = cloneCanvas(geometryCanvas, { willReadFrequently: true });
   const ctx = output.getContext("2d", { willReadFrequently: true });
   if (!ctx) return output;
 
@@ -268,7 +271,7 @@ export function applyFinishGrain(canvas, amount = 0) {
   const strength = clamp(Number(amount) || 0, 0, 100);
   if (strength <= 0) return canvas;
 
-  const output = cloneCanvas(canvas);
+  const output = cloneCanvas(canvas, { willReadFrequently: true });
   const ctx = output.getContext("2d", { willReadFrequently: true });
   if (!ctx) return output;
   const imageData = ctx.getImageData(0, 0, output.width, output.height);
