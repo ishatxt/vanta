@@ -163,8 +163,13 @@ export class PreviewController {
   applyDisplay() {
     if (!this.output) return;
     const { width, height } = this.getDisplaySize();
-    const stageWidth = Math.max(80, this.stage.clientWidth - 48);
-    const stageHeight = Math.max(80, this.stage.clientHeight - 48);
+    const styles = getComputedStyle(this.stage);
+    const paddingX = (Number.parseFloat(styles.paddingLeft) || 0)
+      + (Number.parseFloat(styles.paddingRight) || 0);
+    const paddingY = (Number.parseFloat(styles.paddingTop) || 0)
+      + (Number.parseFloat(styles.paddingBottom) || 0);
+    const stageWidth = Math.max(80, this.stage.clientWidth - paddingX);
+    const stageHeight = Math.max(80, this.stage.clientHeight - paddingY);
     let scale;
     if (this.zoom.mode === "fit") {
       scale = Math.min(stageWidth / width, stageHeight / height);
