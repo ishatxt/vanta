@@ -121,11 +121,11 @@ export const DEFAULT_PIXEL = Object.freeze({
 });
 
 export const DEFAULT_GRAIN = Object.freeze({
-  grainIntensity: 0.15,
-  grainSize: 0.004,
-  ditherLevels: 4,
-  ditherStrength: 0.5,
-  halftoneSize: 0.01,
+  grainIntensity: 0.12,
+  grainSize: 0.003,
+  ditherLevels: 8,
+  ditherStrength: 0,
+  halftoneSize: 0.002,
   halftoneContrast: 1.5,
   brightness: 0,
   contrast: 1,
@@ -134,8 +134,8 @@ export const DEFAULT_GRAIN = Object.freeze({
   chromaStrength: 0.01,
   chromaFalloff: 1.5,
   pixelateSize: 0.002,
-  vignette: 0.5,
-  bloomIntensity: 0.5,
+  vignette: 0.35,
+  bloomIntensity: 0.35,
   bloomRadius: 2.5,
   bloomThreshold: 0.6,
   exposure: 0,
@@ -307,7 +307,7 @@ export const GRAIN_PRESETS = Object.freeze([
   { id: "16mm", label: "16mm Push", settings: { grainIntensity: 0.28, grainSize: 0.008, halftoneSize: 0.001, bloomIntensity: 0.55, fade: 18, halation: 0.4, vignette: 0.7, contrast: 1.1 } },
   { id: "expired", label: "Expired Stock", settings: { grainIntensity: 0.22, grainSize: 0.006, halftoneSize: 0.001, bloomIntensity: 0.35, fade: 28, halation: 0.3, lightLeak: 0.2, vignette: 0.6, temperature: 14, tint: 4 } },
   { id: "noir", label: "Noir Lab", settings: { grainIntensity: 0.2, grainSize: 0.004, halftoneSize: 0.001, saturation: 0, contrast: 1.25, bloomIntensity: 0.35, fade: 6, vignette: 0.75 } },
-  { id: "arcade", label: "Arcade Halftone", settings: { grainIntensity: 0.08, grainSize: 0.004, halftoneSize: 0.012, halftoneContrast: 2.2, ditherLevels: 4, bloomIntensity: 0.6, fade: 0, vignette: 0.4 } },
+  { id: "arcade", label: "Arcade Halftone", settings: { grainIntensity: 0.08, grainSize: 0.004, halftoneSize: 0.012, halftoneContrast: 2.2, ditherLevels: 4, ditherStrength: 0.8, bloomIntensity: 0.6, fade: 0, vignette: 0.4 } },
 ]);
 
 export const REDUCED_MOTION = typeof window !== "undefined"
