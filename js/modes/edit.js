@@ -44,14 +44,18 @@ export function setCropRatio(editSettings, ratio, source) {
     return { ...deepClone(editSettings), crop: { x: 0, y: 0, w: 1, h: 1 } };
   }
   const imageRatio = source.width / source.height;
+  const rotation = ((Math.round((editSettings.rotation || 0) / 90) * 90) % 360 + 360) % 360;
+  // A 90/270-degree rotation swaps the output axes, so the crop fraction
+  // needed to produce the requested final ratio is the reciprocal.
+  const cropRatio = rotation === 90 || rotation === 270 ? 1 / ratio : ratio;
   let w;
   let h;
-  if (imageRatio > ratio) {
+  if (imageRatio > cropRatio) {
     h = 1;
-    w = (ratio * source.height) / source.width;
+    w = (cropRatio * source.height) / source.width;
   } else {
     w = 1;
-    h = source.width / ratio / source.height;
+    h = source.width / cropRatio / source.height;
   }
   w = clamp(w, 0.02, 1);
   h = clamp(h, 0.02, 1);
