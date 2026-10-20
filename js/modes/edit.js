@@ -1,23 +1,17 @@
-import { EDIT_PRESETS, clamp, deepClone } from "../state.js";
+import { DEFAULT_EDIT, EDIT_PRESETS, clamp, deepClone } from "../state.js";
 
 export { EDIT_PRESETS };
-
-function resetGeometry(settings) {
-  return {
-    ...deepClone(settings),
-    crop: { x: 0, y: 0, w: 1, h: 1 },
-    rotation: 0,
-    flipH: false,
-    flipV: false,
-  };
-}
 
 export function applyEditPreset(editSettings, presetId) {
   const preset = EDIT_PRESETS.find((item) => item.id === presetId);
   if (!preset) return deepClone(editSettings);
   return {
-    ...resetGeometry(editSettings),
+    ...deepClone(DEFAULT_EDIT),
     ...deepClone(preset.settings),
+    crop: deepClone(editSettings.crop || DEFAULT_EDIT.crop),
+    rotation: editSettings.rotation || 0,
+    flipH: Boolean(editSettings.flipH),
+    flipV: Boolean(editSettings.flipV),
   };
 }
 
