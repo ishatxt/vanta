@@ -67,89 +67,103 @@ export async function buildExport({ state, format, quality = 0.92, onProgress = 
     throw new Error("Grain Lab can export PNG, JPG, or WEBP.");
   }
 
-  onProgress("Preparing output from the original source…");
-  await tick();
-  const { geometry, limited, fullSize } = resolveExportGeometry(state);
-
-  onProgress("Applying shared image adjustments…");
-  await tick();
-  const adjusted = applyAdjustments(geometry, state.settings.edit);
-
-  let resultCanvas = adjusted;
-  let asciiGrid = null;
-  let asciiMeta = null;
   let engine = null;
-  let blob = null;
 
-  if (state.mode === "ascii") {
-    onProgress("Generating the ASCII grid…");
+  try {
+    onProgress("Preparing output from the original source…");
     await tick();
-    asciiGrid = generateAsciiGrid(adjusted, state.settings.ascii);
-    if (format === "txt") {
-      blob = new Blob([gridToText(asciiGrid)], { type: "text/plain;charset=utf-8" });
-    } else if (format === "svg") {
-      asciiMeta = renderAsciiCanvas(asciiGrid, state.settings.ascii, { targetWidth: adjusted.width });
-      const svg = buildAsciiSvg(asciiGrid, state.settings.ascii, asciiMeta);
-      blob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
-    } else {
-      asciiMeta = renderAsciiCanvas(asciiGrid, state.settings.ascii, { targetWidth: adjusted.width });
-      resultCanvas = asciiMeta.canvas;
-    }
-  } else if (state.mode === "pixel") {
-    onProgress("Reconstructing pixel art…");
+    const { geometry, limited, fullSize } = resolveExportGeometry(state);
+
+    onProgress("Applying shared image adjustments…");
     await tick();
-    const pixel = pixelateCanvas(adjusted, state.settings.pixel, {
-      targetWidth: adjusted.width,
-      referenceWidth: fullSize.width,
-    });
-    resultCanvas = pixel.canvas;
-  } else if (state.mode === "grain") {
-    onProgress("Rendering the WebGL film pipeline…");
-    await tick();
-    try {
-      const canvas = createCanvas(adjusted.width, adjusted.height);
-      engine = new GrainLabEngine(canvas);
-      engine.render(adjusted, state.settings.grain, {
-        width: adjusted.width,
-        height: adjusted.height,
-        sourceKey: `export-${Date.now()}`,
-        time: 24,
+    const adjusted = applyAdjustments(geometry, state.settings.edit);
+
+    let resultCanvas = adjusted;
+    let asciiGrid = null;
+    let asciiMeta = null;
+    let blob = null;
+
+    if (state.mode === "ascii") {
+      onProgress("Generating the ASCII grid…");
+      await tick();
+      asciiGrid = generateAsciiGrid(adjusted, state.settings.ascii);
+      if (format === "txt") {
+        blob = new Blob([gridToText(asciiGrid)], { type: "text/plain;charset=utf-8" });
+      } else if (format === "svg") {
+        asciiMeta = renderAsciiCanvas(asciiGrid, state.settings.ascii, { targetWidth: adjusted.width });
+        const svg = buildAsciiSvg(asciiGrid, state.settings.ascii, asciiMeta);
+        blob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
+      } else {
+        asciiMeta = renderAsciiCanvas(asciiGrid, state.settings.ascii, { targetWidth: adjusted.width });
+        resultCanvas = asciiMeta.canvas;
+      }
+    } else if (state.mode === "pixel") {
+      onProgress("Reconstructing pixel art…");
+      await tick();
+      const pixel = pixelateCanvas(adjusted, state.settings.pixel, {
+        targetWidth: adjusted.width,
+        referenceWidth: fullSize.width,
       });
-      resultCanvas = canvas;
-    } catch {
-      resultCanvas = renderGrainFallback(adjusted, state.settings.grain, adjusted.width, adjusted.height);
+      resultCanvas = pixel.canvas;
+    } else if (state.mode === "grain") {
+      onProgress("Rendering the WebGL film pipeline…");
+      await tick();
+      try {
+        const canvas = createCanvas(adjusted.width, adjusted.height);
+        engine = new GrainLabEngine(canvas);
+        engine.render(adjusted, state.settings.grain, {
+          width: adjusted.width,
+          height: adjusted.height,
+          sourceKey: `export-${Date.now()}`,
+          time: 24,
+        });
+        resultCanvas = canvas;
+      } catch {
+        resultCanvas = renderGrainFallback(adjusted, state.settings.grain, adjusted.width, adjusted.height);
+      }
     }
-  }
 
-  if (["png", "jpeg", "webp"].includes(format)) {
-    onProgress(`Encoding ${info.label}…`);
-    await tick();
-    const output = format === "jpeg" ? prepareJpeg(resultCanvas) : resultCanvas;
-    const mime = info.mime;
-    blob = await canvasToBlob(output, mime, format === "png" ? undefined : quality);
-    if (!blob) throw new Error("The browser could not encode this image.");
-    if (format === "webp" && blob.type !== "image/webp") {
-      throw new Error("WEBP export is not supported by this browser.");
+    if (["png", "jpeg", "webp"].includes(format)) {
+      onProgress(`Encoding ${info.label}…`);
+      await tick();
+      const output = format === "jpeg" ? prepareJpeg(resultCanvas) : resultCanvas;
+      const mime = info.mime;
+      blob = await canvasToBlob(output, mime, format === "png" ? undefined : quality);
+      if (!blob) throw new Error("The browser could not encode this image.");
+      if (format === "webp" && blob.type !== "image/webp") {
+        throw new Error("WEBP export is not supported by this browser.");
+      }
     }
+
+    if (!blob || blob.size === 0) throw new Error("The export generated an empty file.");
+
+    let outputWidth = resultCanvas?.width || fullSize.width;
+    let outputHeight = resultCanvas?.height || fullSize.height;
+    if (format === "txt" && asciiGrid) {
+      outputWidth = asciiGrid.cols;
+      outputHeight = asciiGrid.rows;
+    } else if (format === "svg" && asciiMeta) {
+      outputWidth = asciiMeta.width;
+      outputHeight = asciiMeta.height;
+    }
+
+    return {
+      blob,
+      filename: exportFilename(state, format),
+      format,
+      mime: info.mime,
+      width: outputWidth,
+      height: outputHeight,
+      scale: limited.scale,
+      originalWidth: fullSize.width,
+      originalHeight: fullSize.height,
+      asciiGrid,
+      asciiMeta,
+      mode: state.mode,
+    };
+  } finally {
+    engine?.dispose();
   }
-
-  engine?.dispose();
-  if (!blob || blob.size === 0) throw new Error("The export generated an empty file.");
-
-  return {
-    blob,
-    filename: exportFilename(state, format),
-    format,
-    mime: info.mime,
-    width: resultCanvas?.width || fullSize.width,
-    height: resultCanvas?.height || fullSize.height,
-    scale: limited.scale,
-    originalWidth: fullSize.width,
-    originalHeight: fullSize.height,
-    asciiGrid,
-    asciiMeta,
-    mode: state.mode,
-  };
 }
 
 export function downloadBlob(blob, filename) {
