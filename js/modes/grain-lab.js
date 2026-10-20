@@ -579,11 +579,13 @@ export class GrainLabEngine {
       this.swap();
     }
 
-    this.drawPass(this.programs.dither, this.source(), this.destination(), {
-      u_levels: v.ditherLevels,
-      u_strength: v.ditherStrength,
-    });
-    this.swap();
+    if (v.ditherStrength > 0.001) {
+      this.drawPass(this.programs.dither, this.source(), this.destination(), {
+        u_levels: v.ditherLevels,
+        u_strength: v.ditherStrength,
+      });
+      this.swap();
+    }
 
     this.drawPass(this.programs.bloomH, this.source(), this.bloomFramebuffer, {
       u_radius: v.bloomRadius,
@@ -701,8 +703,8 @@ export const GRAIN_GROUPS = Object.freeze([
           label: preset.label,
         })),
       },
-      { type: "range", key: "grainIntensity", label: "Grain Intensity", min: 0, max: 1, step: 0.01, digits: 2, default: 0.15 },
-      { type: "range", key: "grainSize", label: "Grain Size", min: 0.001, max: 0.04, step: 0.001, digits: 3, default: 0.004 },
+      { type: "range", key: "grainIntensity", label: "Grain Intensity", min: 0, max: 1, step: 0.01, digits: 2, default: 0.12 },
+      { type: "range", key: "grainSize", label: "Grain Size", min: 0.001, max: 0.04, step: 0.001, digits: 3, default: 0.003 },
       { type: "toggle", key: "animate", label: "Animate grain", default: true },
     ],
   },
@@ -711,9 +713,9 @@ export const GRAIN_GROUPS = Object.freeze([
     label: "Texture",
     open: true,
     controls: [
-      { type: "range", key: "ditherLevels", label: "Dither Levels", min: 2, max: 16, step: 1, digits: 0, default: 4 },
-      { type: "range", key: "ditherStrength", label: "Dither Mix", min: 0, max: 1, step: 0.01, digits: 2, default: 0.5 },
-      { type: "range", key: "halftoneSize", label: "Halftone Scale", min: 0.002, max: 0.04, step: 0.001, digits: 3, default: 0.01 },
+      { type: "range", key: "ditherLevels", label: "Dither Levels", min: 2, max: 16, step: 1, digits: 0, default: 8 },
+      { type: "range", key: "ditherStrength", label: "Dither Mix", min: 0, max: 1, step: 0.01, digits: 2, default: 0 },
+      { type: "range", key: "halftoneSize", label: "Halftone Scale", min: 0.002, max: 0.04, step: 0.001, digits: 3, default: 0.002 },
       { type: "range", key: "halftoneContrast", label: "Halftone Contrast", min: 0.5, max: 4, step: 0.05, digits: 2, default: 1.5 },
     ],
   },
@@ -740,7 +742,7 @@ export const GRAIN_GROUPS = Object.freeze([
       { type: "range", key: "chromaStrength", label: "CA Strength", min: 0, max: 0.06, step: 0.001, digits: 3, default: 0.01 },
       { type: "range", key: "chromaFalloff", label: "CA Falloff", min: 0.5, max: 4, step: 0.1, digits: 1, default: 1.5 },
       { type: "range", key: "pixelateSize", label: "Pixelate", min: 0.002, max: 0.05, step: 0.001, digits: 3, default: 0.002 },
-      { type: "range", key: "vignette", label: "Vignette", min: 0, max: 2, step: 0.05, digits: 2, default: 0.5 },
+      { type: "range", key: "vignette", label: "Vignette", min: 0, max: 2, step: 0.05, digits: 2, default: 0.35 },
     ],
   },
   {
@@ -748,7 +750,7 @@ export const GRAIN_GROUPS = Object.freeze([
     label: "Light & Finish",
     open: false,
     controls: [
-      { type: "range", key: "bloomIntensity", label: "Bloom Intensity", min: 0, max: 3, step: 0.05, digits: 2, default: 0.5 },
+      { type: "range", key: "bloomIntensity", label: "Bloom Intensity", min: 0, max: 3, step: 0.05, digits: 2, default: 0.35 },
       { type: "range", key: "bloomRadius", label: "Bloom Radius", min: 1, max: 6, step: 0.5, digits: 1, default: 2.5 },
       { type: "range", key: "bloomThreshold", label: "Bloom Threshold", min: 0, max: 1, step: 0.01, digits: 2, default: 0.6 },
       { type: "range", key: "halation", label: "Halation", min: 0, max: 1, step: 0.01, digits: 2, default: 0 },
