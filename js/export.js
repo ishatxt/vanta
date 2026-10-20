@@ -100,7 +100,7 @@ export async function buildExport({ state, format, quality = 0.92, onProgress = 
     await tick();
     const pixel = pixelateCanvas(adjusted, state.settings.pixel, {
       targetWidth: adjusted.width,
-      referenceWidth: adjusted.width,
+      referenceWidth: fullSize.width,
     });
     resultCanvas = pixel.canvas;
   } else if (state.mode === "grain") {
