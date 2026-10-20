@@ -12,6 +12,75 @@ const AMBER_SHADES = ["#ffe0a3", "#ffc46b", "#e39a2e", "#a76812", "#6f4306"];
 
 export { ASCII_CHARSETS, ASCII_COLOR_MODES };
 
+export const ASCII_GROUPS = Object.freeze([
+  {
+    id: "characters",
+    label: "Character Grid",
+    open: true,
+    controls: [
+      {
+        type: "select",
+        key: "charsetPreset",
+        label: "Character Set",
+        options: ASCII_CHARSETS.map((set) => ({ value: set.id, label: set.label })),
+        default: "classic",
+      },
+      { type: "text", key: "charset", label: "Custom Characters", placeholder: "@#%*+=-:. ", default: "@#S%?*+;:,. " },
+      { type: "range", key: "columns", label: "Columns", min: 20, max: 300, step: 1, digits: 0, default: 140 },
+      {
+        type: "select",
+        key: "font",
+        label: "Monospace Font",
+        options: [
+          { value: "JetBrains Mono", label: "JetBrains Mono" },
+          { value: "Courier New", label: "Courier New" },
+          { value: "Lucida Console", label: "Lucida Console" },
+          { value: "monospace", label: "System Monospace" },
+        ],
+        default: "JetBrains Mono",
+      },
+      { type: "toggle", key: "bold", label: "Bold glyphs", default: false },
+    ],
+  },
+  {
+    id: "tone",
+    label: "Tone & Color",
+    open: true,
+    controls: [
+      { type: "range", key: "brightness", label: "Brightness", min: -100, max: 100, step: 1, digits: 0, default: 0 },
+      { type: "range", key: "contrast", label: "Contrast", min: -100, max: 100, step: 1, digits: 0, default: 0 },
+      { type: "toggle", key: "invert", label: "Invert character mapping", default: false },
+      {
+        type: "select",
+        key: "colorMode",
+        label: "Color Mode",
+        options: ASCII_COLOR_MODES.map((mode) => ({ value: mode.id, label: mode.label })),
+        default: "mono",
+      },
+      { type: "color", key: "fgColor", label: "Foreground", default: "#e9eff7" },
+      { type: "color", key: "bgColor", label: "Background", default: "#050607" },
+      { type: "color", key: "customStart", label: "Palette Start", default: "#00ff9d" },
+      { type: "color", key: "customEnd", label: "Palette End", default: "#f5f7ff" },
+      { type: "range", key: "grainFinish", label: "Grain finish", min: 0, max: 100, step: 1, digits: 0, default: 0 },
+    ],
+  },
+  {
+    id: "output",
+    label: "Text Output",
+    open: false,
+    controls: [
+      {
+        type: "button-row",
+        label: "Shared character grid",
+        actions: [
+          { id: "ascii-open-text", label: "Open text" },
+          { id: "ascii-copy-text", label: "Copy text" },
+        ],
+      },
+    ],
+  },
+]);
+
 function hexToRgb(hex, fallback = "#000000") {
   const value = /^#[0-9a-f]{6}$/i.test(hex || "") ? hex : fallback;
   return {
